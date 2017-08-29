@@ -7,30 +7,31 @@ class Message extends Component {
 }
 
 function mapMessages(data) {
+  
   let isRead
   let isStar
 
-  return data.map((data) => {
+  return data.map(({ id, subject, read, starred, selected, labels }) => {
 
-    data.read ? isRead = "read" : isRead = "unread"
-    data.starred ? isStar = "" : isStar = "-o"
+    read ? isRead = "read" : isRead = "unread"
+    starred ? isStar = "" : isStar = "-o"
 
     return (
-    <div className={ "row message " + isRead } key={data.id}>
+    <div className={ `row message ${isRead}` } key={id}>
       <div className="col-xs-1">
         <div className="row">
           <div className="col-xs-2">
             <input type="checkbox" />
           </div>
           <div className="col-xs-2">
-            <i className={ "star fa fa-star" + isStar}></i>
+            <i className={ `star fa fa-star${isStar}` }></i>
           </div>
         </div>
       </div>
       <div className="col-xs-11">
       <span className="label label-warning"></span>
         <a href="">
-          {data.subject}
+          { subject }
         </a>
       </div>
     </div>
