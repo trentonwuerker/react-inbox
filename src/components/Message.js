@@ -1,42 +1,45 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class Message extends Component {
-  render() {
-    return <div>{mapMessages(this.props.data)}</div>
-  }
-}
 
-function mapMessages(data) {
-  
-  let isRead
-  let isStar
+const Message = ({
+  message,
+  toggleStar,
+  toggleSelect
+  }) => {
 
-  return data.map(({ id, subject, read, starred, selected, labels }) => {
+    const isRead = message.read ? 'read' : 'unread'
+    const isStarred = message.starred ? 'fa-star' : 'fa-star-o'
+    const isSelected = message.selected ? 'selected' : ''
 
-    read ? isRead = "read" : isRead = "unread"
-    starred ? isStar = "" : isStar = "-o"
+    const labels = message.labels.map((label, i) => (
+      <span key={i} className="label label-warning">{label}</span>
+    ))
+
+    const changeStar = () => {
+      toggleStar(message)
+    }
 
     return (
-    <div className={ `row message ${isRead}` } key={id}>
-      <div className="col-xs-1">
-        <div className="row">
-          <div className="col-xs-2">
-            <input type="checkbox" />
-          </div>
-          <div className="col-xs-2">
-            <i className={ `star fa fa-star${isStar}` }></i>
+      <div className={ `row message ${ isRead } ${ isSelected }` }>
+        <div className="col-xs-1">
+          <div className="row">
+            <div className="col-xs-2">
+              <input type="checkbox" checked={ !!message.selected } onChange={ () => toggleSelect(message) } />
+            </div>
+            <div className="col-xs-2" onClick={ changeStar }>
+              <i className={`star fa ${ isStarred }`}></i>
+            </div>
           </div>
         </div>
+        <div className="col-xs-11">
+          { labels }
+          <a href="">
+            { message.subject }
+          </a>
+        </div>
       </div>
-      <div className="col-xs-11">
-      <span className="label label-warning"></span>
-        <a href="">
-          { subject }
-        </a>
-      </div>
-    </div>
     )
-  })
 }
+
 
 export default Message

@@ -1,3 +1,7 @@
+body {
+  padding: 1%
+}
+
 .message {
   margin-left: 0px;
   padding-top: 8px;
@@ -31,8 +35,7 @@
 }
 
 .message:hover {
-  margin-left: -3px;
-  border-left: 3px solid #ccc;
+  background: #f2f2c2;
 }
 
 .message-body {
