@@ -30,19 +30,19 @@ class App extends Component {
     })
   }
 
+  toggleAttr(attribute, bool) {
+    this.state.messages.forEach((message, i) => {
+      this.setState((prevState) => {
+        prevState.messages[i][attribute] = bool
+      })
+    })
+  }
+
   selectDeselect = (numSelected) => {
     if (numSelected === this.state.messages.length) {
-      this.state.messages.forEach((message, i) => {
-        this.setState((prevState) => {
-          prevState.messages[i].selected = false
-        })
-      })
+      this.toggleAttr('selected', false)
     } else {
-      this.state.messages.forEach((message, i) => {
-        this.setState((prevState) => {
-          prevState.messages[i].selected = true
-        })
-      })
+      this.toggleAttr('selected', true)
     }
   }
 
@@ -67,24 +67,33 @@ class App extends Component {
   }
 
   deleteMessage = () => {
-    for (let i = this.state.messages.length; i >= 0; i--) {
-      console.log(this.state.messages[i - 1].selected);
-      // if (this.state.messages[i].selected) {
-      //   this.setState((prevState) => {
-      //     prevState.messages.splice(i,1)
-      //   })
-      // }
+    for (let i = this.state.messages.length; i > 0; i--) {
+      if (this.state.messages[i - 1].selected) {
+        this.setState((prevState) => {
+          prevState.messages.splice(i - 1,1)
+        })
+      }
     }
+  }
+
+  addLabel = (label) => {
+    this.state.messages.forEach((message, i) => {
+      if(message.selected) {
+        console.log(message);
+      }
+    })
   }
 
   render() {
     return (
       <div>
         <Toolbar messages={this.state.messages}
-                  selectDeselect={this.selectDeselect.bind(this)}
-                  markRead={ this.markRead.bind(this)}
-                  markUnread={this.markUnread.bind(this)}
-                  deleteMessage={this.deleteMessage.bind(this)}/>
+                 selectDeselect={this.selectDeselect.bind(this)}
+                 markRead={ this.markRead.bind(this)}
+                 markUnread={this.markUnread.bind(this)}
+                 deleteMessage={this.deleteMessage.bind(this)}
+                 addLabel={this.addLabel.bind(this)}/>
+
         <Messages messages={this.state.messages}
                   toggleStar={this.toggleStar.bind(this)}
                   toggleSelect={this.toggleSelect.bind(this)}/>

@@ -7,12 +7,14 @@ const Messages = ({
   toggleStar,
   toggleSelect
   }) => {
+
   return (
     <div>
-      {messages.map(message => <Message key={message.id}
-                                        message={ message }
-                                        toggleStar={ toggleStar }
-                                        toggleSelect={ toggleSelect }/>)}
+      {messages.map(message =>
+        <Message key={message.id}
+                 message={ message }
+                 toggleStar={ toggleStar }
+                 toggleSelect={ toggleSelect }/>)}
     </div>
   )
 }

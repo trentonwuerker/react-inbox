@@ -5,21 +5,27 @@ const Toolbar = ({
   selectDeselect,
   markRead,
   markUnread,
-  deleteMessage
+  deleteMessage,
+  addLabel,
+  removeLabel
 }) => {
 
     const unread = messages.filter((item) => item.read === false).length
     const selectedMessages = messages.filter((item) => item.selected === true).length
+    var disableToolbar = !selectedMessages ? true : false
     var allRead
 
-
-    if ( selectedMessages === messages.length) {
-      allRead = 'fa-check-square-o'
-    } else if ( selectedMessages === 0) {
-      allRead = 'fa-square-o'
-    } else {
-      allRead = 'fa-minus-square-o'
+    switch (selectedMessages) {
+      case messages.length:
+        allRead = 'fa-check-square-o'
+        break;
+      case 0:
+        allRead = 'fa-square-o'
+        break;
+      default:
+        allRead = 'fa-minus-square-o'
     }
+
 
     return (
       <div className="row toolbar">
@@ -37,26 +43,28 @@ const Toolbar = ({
             <i className={`fa ${allRead}`}></i>
           </button>
 
-          <button className="btn btn-default" onClick={() => markRead()} >Mark As Read</button>
+          <button className="btn btn-default" onClick={() => markRead()} disabled={ disableToolbar }>Mark As Read</button>
 
-          <button className="btn btn-default" onClick={() => markUnread()}>Mark As Unread</button>
+          <button className="btn btn-default" onClick={() => markUnread()} disabled={ disableToolbar }>Mark As Unread</button>
 
-          <select className="form-control label-select">
+          <select className="form-control label-select" disabled={ disableToolbar }>
             <option>Apply label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <select className="form-control label-select">
+          <select className="form-control label-select" disabled={ disableToolbar }>
             <option>Remove label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
-          <button className="btn btn-default" onClick={ () => deleteMessage() }>
+
+          <button className="btn btn-default" onClick={ () => deleteMessage() } disabled={ disableToolbar }>
             <i className="fa fa-trash-o"></i>
           </button>
+
         </div>
       </div>
     )

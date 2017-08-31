@@ -15,10 +15,6 @@ const Message = ({
       <span key={i} className="label label-warning">{label}</span>
     ))
 
-    const changeStar = () => {
-      toggleStar(message)
-    }
-
     return (
       <div className={ `row message ${ isRead } ${ isSelected }` }>
         <div className="col-xs-1">
@@ -26,16 +22,14 @@ const Message = ({
             <div className="col-xs-2">
               <input type="checkbox" checked={ !!message.selected } onChange={ () => toggleSelect(message) } />
             </div>
-            <div className="col-xs-2" onClick={ changeStar }>
+            <div className="col-xs-2" onClick={ () => toggleStar(message) }>
               <i className={`star fa ${ isStarred }`}></i>
             </div>
           </div>
         </div>
         <div className="col-xs-11">
           { labels }
-          <a href="">
-            { message.subject }
-          </a>
+          { message.subject }
         </div>
       </div>
     )
