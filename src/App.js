@@ -66,15 +66,17 @@ class App extends Component {
     })
   }
 
-  deleteMessage =() => {
-    this.setState((prevState) => {
-      prevState.messages.forEach((message, i) => {
-        return message.selected ?
-        prevState.messages.splice(i, 1) :
-        message
-      })
-    })
+  deleteMessage = () => {
+    for (let i = this.state.messages.length; i > 0; i--) {
+      if (this.state.messages[i - 1].selected) {
+        this.setState((prevState) => {
+          prevState.messages.splice(i - 1, 1)
+        })
+      }
+    }
   }
+
+
 
   addLabel = (label) => {
     this.state.messages.forEach((message, i) => {
