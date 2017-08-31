@@ -26,7 +26,6 @@ const Toolbar = ({
         allRead = 'fa-minus-square-o'
     }
 
-
     return (
       <div className="row toolbar">
         <div className="col-md-12">
@@ -47,15 +46,15 @@ const Toolbar = ({
 
           <button className="btn btn-default" onClick={() => markUnread()} disabled={ disableToolbar }>Mark As Unread</button>
 
-          <select className="form-control label-select" disabled={ disableToolbar }>
-            <option>Apply label</option>
+          <select className="form-control label-select" onChange={(e) => addLabel(e.target.value)} disabled={ disableToolbar } defaultValue="none">
+            <option disabled="true" value="none">Apply label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <select className="form-control label-select" disabled={ disableToolbar }>
-            <option>Remove label</option>
+          <select className="form-control label-select" onChange={(e) => removeLabel(e.target.value)} disabled={ disableToolbar } defaultValue="none">
+            <option disabled="true" value="none">Remove label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>

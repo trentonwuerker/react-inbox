@@ -78,8 +78,21 @@ class App extends Component {
 
   addLabel = (label) => {
     this.state.messages.forEach((message, i) => {
-      if(message.selected) {
-        console.log(message);
+      if(message.selected && !message.labels.filter((tag, j) => message.labels[j] === label).length) {
+        this.setState((prevState) => {
+          prevState.messages[i].labels.push(label)
+        })
+      }
+    })
+  }
+
+  removeLabel = (label) => {
+    this.state.messages.forEach((message, i) => {
+      if(message.selected && message.labels.filter((tag, j) => message.labels[j] === label).length) {
+        this.setState((prevState) => {
+          var index = prevState.messages[i].labels.indexOf(label)
+          prevState.messages[i].labels.splice(index, 1)
+        })
       }
     })
   }
@@ -92,7 +105,8 @@ class App extends Component {
                  markRead={ this.markRead.bind(this)}
                  markUnread={this.markUnread.bind(this)}
                  deleteMessage={this.deleteMessage.bind(this)}
-                 addLabel={this.addLabel.bind(this)}/>
+                 addLabel={this.addLabel.bind(this)}
+                 removeLabel={this.removeLabel.bind(this)}/>
 
         <Messages messages={this.state.messages}
                   toggleStar={this.toggleStar.bind(this)}
