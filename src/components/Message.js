@@ -20,7 +20,7 @@ const Message = ({
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
-              <input type="checkbox" checked={ message.selected } onChange={ () => toggleSelect(message) } />
+              <input type="checkbox" checked={ !!message.selected } onChange={ () => toggleSelect(message) } />
             </div>
             <div className="col-xs-2" onClick={ () => toggleStar(message) }>
               <i className={`star fa ${ isStarred }`}></i>

@@ -66,19 +66,19 @@ class App extends Component {
     })
   }
 
-  deleteMessage = () => {
-    for (let i = this.state.messages.length; i > 0; i--) {
-      if (this.state.messages[i - 1].selected) {
-        this.setState((prevState) => {
-          prevState.messages.splice(i - 1,1)
-        })
-      }
-    }
+  deleteMessage =() => {
+    this.setState((prevState) => {
+      prevState.messages.forEach((message, i) => {
+        return message.selected ?
+        prevState.messages.splice(i, 1) :
+        message
+      })
+    })
   }
 
   addLabel = (label) => {
     this.state.messages.forEach((message, i) => {
-      if(message.selected && !message.labels.filter((tag, j) => message.labels[j] === label).length) {
+      if(message.selected && !message.labels.includes(label)) {
         this.setState((prevState) => {
           prevState.messages[i].labels.push(label)
         })
@@ -88,7 +88,7 @@ class App extends Component {
 
   removeLabel = (label) => {
     this.state.messages.forEach((message, i) => {
-      if(message.selected && message.labels.filter((tag, j) => message.labels[j] === label).length) {
+      if(message.selected && message.labels.includes(label)) {
         this.setState((prevState) => {
           var index = prevState.messages[i].labels.indexOf(label)
           prevState.messages[i].labels.splice(index, 1)
