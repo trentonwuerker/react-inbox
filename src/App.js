@@ -2,17 +2,44 @@ import React, { Component } from 'react';
 import './index.css';
 import Toolbar from './components/Toolbar'
 import Messages from './components/Messages'
-import messages from './db/seeds'
+
+const baseURL = 'http://localhost:8082/api'
+const headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+}
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      messages: messages
+
+  state = {
+    messages: []
+  }
+
+  async componentDidMount() {
+    try {
+      const response = await fetch(`${baseURL}/messages`)
+      const json = await response.json()
+      this.setState({messages: json._embedded.messages})
+    } catch(err) {
+      console.log(err);
     }
   }
 
   toggleStar = (message) => {
+
+    let newStar = !message.starred
+    let body = {
+      "messageIds": [ message.id ],
+      "command": "star",
+      "star": newStar
+    }
+
+    fetch(`${baseURL}/messages`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      headers
+    })
+
     this.setState((prevState) => {
       var current = prevState.messages.indexOf(message)
       prevState.messages[current].starred ?
@@ -30,14 +57,6 @@ class App extends Component {
     })
   }
 
-  toggleAttr(attribute, bool) {
-    this.state.messages.forEach((message, i) => {
-      this.setState((prevState) => {
-        prevState.messages[i][attribute] = bool
-      })
-    })
-  }
-
   selectDeselect = (numSelected) => {
     if (numSelected === this.state.messages.length) {
       this.toggleAttr('selected', false)
@@ -46,9 +65,29 @@ class App extends Component {
     }
   }
 
+  toggleAttr(attribute, bool) {
+    this.state.messages.forEach((message, i) => {
+      this.setState((prevState) => {
+        prevState.messages[i][attribute] = bool
+      })
+    })
+  }
+
   markRead = () => {
     this.state.messages.forEach((message, i) => {
       if (message.selected && !message.read) {
+        let body = {
+          "messageIds": [ message.id ],
+          "command": "read",
+          "read": true
+        }
+
+        fetch(`${baseURL}/messages`, {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+          headers
+        })
+
         this.setState((prevState) => {
           prevState.messages[i].read = true
         })
@@ -59,6 +98,18 @@ class App extends Component {
   markUnread = () => {
     this.state.messages.forEach((message, i) => {
       if (message.selected && message.read) {
+        let body = {
+          "messageIds": [ message.id ],
+          "command": "read",
+          "read": false
+        }
+
+        fetch(`${baseURL}/messages`, {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+          headers
+        })
+
         this.setState((prevState) => {
           prevState.messages[i].read = false
         })
@@ -67,6 +118,25 @@ class App extends Component {
   }
 
   deleteMessage = () => {
+
+    let toBeDeleted = []
+
+    this.state.messages.forEach(message => {
+      return message.selected ? toBeDeleted.push(message.id) : null
+    })
+
+    let body = {
+      "messageIds": toBeDeleted,
+      "command": "delete"
+    }
+
+    console.log(toBeDeleted);
+    fetch(`${baseURL}/messages`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      headers
+    })
+
     for (let i = this.state.messages.length; i > 0; i--) {
       if (this.state.messages[i - 1].selected) {
         this.setState((prevState) => {
@@ -75,8 +145,6 @@ class App extends Component {
       }
     }
   }
-
-
 
   addLabel = (label) => {
     this.state.messages.forEach((message, i) => {
