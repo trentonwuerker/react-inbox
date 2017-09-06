@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './index.css';
 import Toolbar from './components/Toolbar'
 import Messages from './components/Messages'
-
+import ComposeForm from './components/Compose'
 const baseURL = 'http://localhost:8082/api'
 const headers = {
   'Content-Type': 'application/json',
@@ -12,10 +12,11 @@ const headers = {
 class App extends Component {
 
   state = {
-    messages: []
+    messages: [],
+    showCompose: false
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     try {
       const response = await fetch(`${baseURL}/messages`)
       const json = await response.json()
@@ -130,7 +131,6 @@ class App extends Component {
       "command": "delete"
     }
 
-    console.log(toBeDeleted);
     fetch(`${baseURL}/messages`, {
       method: 'PATCH',
       body: JSON.stringify(body),
@@ -149,6 +149,18 @@ class App extends Component {
   addLabel = (label) => {
     this.state.messages.forEach((message, i) => {
       if(message.selected && !message.labels.includes(label)) {
+        let body = {
+          "messageIds": [ message.id ],
+          "command": "addLabel",
+          "label": label
+        }
+
+        fetch(`${baseURL}/messages`, {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+          headers
+        })
+
         this.setState((prevState) => {
           prevState.messages[i].labels.push(label)
         })
@@ -159,11 +171,42 @@ class App extends Component {
   removeLabel = (label) => {
     this.state.messages.forEach((message, i) => {
       if(message.selected && message.labels.includes(label)) {
+
+        let body = {
+          "messageIds": [ message.id ],
+          "command": "removeLabel",
+          "label": label
+        }
+
+        fetch(`${baseURL}/messages`, {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+          headers
+        })
+
         this.setState((prevState) => {
           var index = prevState.messages[i].labels.indexOf(label)
           prevState.messages[i].labels.splice(index, 1)
         })
       }
+    })
+  }
+
+  toggleCompose = () => {
+    this.setState( {showCompose: !this.state.showCompose} )
+  }
+
+  sendMessage = async (data) => {
+    const response = await fetch(`${baseURL}/messages`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers
+    })
+    let newMessage = await response.json()
+    let messages = [...this.state.messages, newMessage]
+    this.setState({
+      messages,
+      showCompose: false
     })
   }
 
@@ -176,7 +219,15 @@ class App extends Component {
                  markUnread={this.markUnread.bind(this)}
                  deleteMessage={this.deleteMessage.bind(this)}
                  addLabel={this.addLabel.bind(this)}
-                 removeLabel={this.removeLabel.bind(this)}/>
+                 removeLabel={this.removeLabel.bind(this)}
+                 toggleCompose={this.toggleCompose.bind(this)}
+                 sendMessage={this.sendMessage.bind(this)}/>
+        {
+          this.state.showCompose ?
+            <ComposeForm sendMessage={this.sendMessage.bind(this)}
+                         toggleCompose={ this.toggleCompose.bind(this) }/> :
+            null
+        }
 
         <Messages messages={this.state.messages}
                   toggleStar={this.toggleStar.bind(this)}

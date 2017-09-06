@@ -7,7 +7,9 @@ const Toolbar = ({
   markUnread,
   deleteMessage,
   addLabel,
-  removeLabel
+  removeLabel,
+  sendMessage,
+  toggleCompose
 }) => {
 
     const unread = messages.filter((item) => item.read === false).length
@@ -34,7 +36,7 @@ const Toolbar = ({
             unread messages
           </p>
 
-          <a className="btn btn-danger">
+          <a className="btn btn-danger" onClick={ () => toggleCompose() }>
             <i className="fa fa-plus"></i>
           </a>
 
