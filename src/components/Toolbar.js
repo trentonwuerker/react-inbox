@@ -8,7 +8,6 @@ const Toolbar = ({
   deleteMessage,
   addLabel,
   removeLabel,
-  sendMessage,
   toggleCompose
 }) => {
 

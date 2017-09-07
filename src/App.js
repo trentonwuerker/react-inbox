@@ -66,7 +66,7 @@ class App extends Component {
     }
   }
 
-  toggleAttr(attribute, bool) {
+  toggleAttr = (attribute, bool) => {
     this.state.messages.forEach((message, i) => {
       this.setState((prevState) => {
         prevState.messages[i][attribute] = bool
@@ -149,6 +149,7 @@ class App extends Component {
   addLabel = (label) => {
     this.state.messages.forEach((message, i) => {
       if(message.selected && !message.labels.includes(label)) {
+
         let body = {
           "messageIds": [ message.id ],
           "command": "addLabel",
@@ -220,8 +221,7 @@ class App extends Component {
                  deleteMessage={this.deleteMessage.bind(this)}
                  addLabel={this.addLabel.bind(this)}
                  removeLabel={this.removeLabel.bind(this)}
-                 toggleCompose={this.toggleCompose.bind(this)}
-                 sendMessage={this.sendMessage.bind(this)}/>
+                 toggleCompose={this.toggleCompose.bind(this)}/>
         {
           this.state.showCompose ?
             <ComposeForm sendMessage={this.sendMessage.bind(this)}
